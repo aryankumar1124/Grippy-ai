@@ -1,101 +1,136 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import IntakeForm from "@/components/IntakeForm";
+import TherapistCard from "@/components/TherapistCard";
+import CostPanel from "@/components/CostPanel";
+import { buildModel, getStat } from "@/components/model";
+import { localEdit } from "@/components/localEdit";
+import type { AidSpec, IntakeInput, MeshData } from "@/lib/types";
+
+const Viewer3D = dynamic(() => import("@/components/Viewer3D"), {
+  ssr: false,
+  loading: () => <div className="h-[340px] w-full animate-pulse rounded-2xl bg-sky-50 sm:h-[420px]" />,
+});
+
+async function postJSON<T>(url: string, body: unknown): Promise<T> {
+  const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || "Something went wrong.");
+  return data as T;
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const stat = getStat("53.2 million");
+  const [spec, setSpec] = useState<AidSpec | null>(null);
+  const [mesh, setMesh] = useState<MeshData | null>(null);
+  const [stl, setStl] = useState<Blob | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [changeSummary, setChangeSummary] = useState<string | null>(null);
+  const [offline, setOffline] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Rebuild the 3D model whenever the spec changes.
+  useEffect(() => {
+    if (!spec) return;
+    let cancelled = false;
+    buildModel(spec).then(({ mesh, stl }) => {
+      if (cancelled) return;
+      setMesh(mesh);
+      setStl(stl);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [spec]);
+
+  const assess = async (input: IntakeInput) => {
+    setLoading(true);
+    setError(null);
+    setChangeSummary(null);
+    try {
+      const data = await postJSON<{ spec: AidSpec; fallback?: boolean }>("/api/assess", input);
+      setOffline(!!data.fallback);
+      setSpec(data.spec);
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const edit = async (instruction: string) => {
+    if (!spec) return;
+    setEditing(true);
+    try {
+      const data = await postJSON<{ spec: AidSpec; changeSummary: string }>("/api/edit", { spec, instruction });
+      const unchanged = JSON.stringify(data.spec.params) === JSON.stringify(spec.params);
+      const local = unchanged ? localEdit(spec, instruction) : null;
+      if (local) {
+        setSpec(local.spec);
+        setChangeSummary(local.changeSummary);
+      } else {
+        setSpec(data.spec);
+        setChangeSummary(data.changeSummary);
+      }
+    } catch {
+      const local = localEdit(spec, instruction);
+      if (local) {
+        setSpec(local.spec);
+        setChangeSummary(local.changeSummary);
+      } else {
+        setChangeSummary("Couldn't apply that change. Try something like “make it longer”.");
+      }
+    } finally {
+      setEditing(false);
+    }
+  };
+
+  return (
+    <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-16">
+      <header className="mb-8 max-w-3xl">
+        <p className="mb-3 inline-block rounded-full bg-teal-100 px-3 py-1 text-sm font-semibold text-teal-900">Grippy</p>
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+          Tell us what&apos;s hard. We&apos;ll design the tool.
+        </h1>
+        <p className="mt-4 text-xl text-slate-600">
+          AI designed adaptive aids, sized to you and 3D printable for cents of filament.
+        </p>
+        {stat && (
+          <p className="mt-4 text-base text-slate-600">
+            <span className="font-semibold text-slate-900">{stat.number}</span> US adults report diagnosed arthritis.{" "}
+            <a href={stat.source_url} target="_blank" rel="noopener noreferrer" className="underline">
+              CDC
+            </a>
+          </p>
+        )}
+      </header>
+
+      <IntakeForm loading={loading} onSubmit={assess} />
+
+      {error && (
+        <p role="alert" className="mt-4 rounded-xl bg-red-50 p-4 text-red-900 ring-1 ring-red-200">
+          {error}
+        </p>
+      )}
+
+      {spec && (
+        <div ref={resultsRef} className="mt-10 grid scroll-mt-6 gap-6 lg:grid-cols-2">
+          <TherapistCard spec={spec} editing={editing} changeSummary={changeSummary} offline={offline} onEdit={edit} />
+          <div>
+            <Viewer3D mesh={mesh} label={`3D model of your ${spec.title}`} />
+            <CostPanel spec={spec} stl={stl} />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      )}
+
+      <footer className="mt-16 text-center text-sm text-slate-500">
+        Built at the Nittany AI Vibeathon. A prototype, not medical advice or a licensed therapist. Check fit and strength before daily use and ask an occupational therapist when you can.
       </footer>
-    </div>
+    </main>
   );
 }

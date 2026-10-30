@@ -3,25 +3,50 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f9fc;
+  --foreground: #0f172a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  font-size: 18px;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Clear, high contrast focus ring for keyboard users. */
+:focus-visible {
+  outline: 3px solid #0369a1;
+  outline-offset: 3px;
+}
+textarea:focus,
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(3, 105, 161, 0.2);
+}
+
+@layer components {
+  .card {
+    @apply rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-sky-800 px-6 py-3 font-semibold text-white transition-colors hover:bg-sky-900 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-600;
+  }
+  .chip {
+    @apply rounded-full border-2 border-slate-300 bg-white px-4 py-2 text-base font-medium text-slate-800 transition-colors hover:border-teal-600 hover:bg-teal-50 disabled:opacity-50;
+  }
+  .chip-active {
+    @apply border-teal-700 bg-teal-700 text-white hover:bg-teal-800;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
