@@ -26,13 +26,13 @@ export default function CostPanel({ spec, stl }: { spec: AidSpec; stl: Blob | nu
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-baseline gap-6">
           <div>
-            <p className="text-sm font-medium uppercase tracking-wide text-slate-500">Retail</p>
+            <p className="text-sm font-medium uppercase tracking-wide text-slate-500">Retail (typical unit)</p>
             <p className="text-2xl font-semibold text-slate-500 line-through decoration-slate-400">
               ~${retail.usd.toFixed(2)}
             </p>
           </div>
           <div>
-            <p className="text-sm font-medium uppercase tracking-wide text-teal-700">Print it</p>
+            <p className="text-sm font-medium uppercase tracking-wide text-teal-700">Print it (filament)</p>
             <p className="text-3xl font-bold text-teal-800">~${print.toFixed(2)}</p>
           </div>
         </div>
@@ -41,7 +41,7 @@ export default function CostPanel({ spec, stl }: { spec: AidSpec; stl: Blob | nu
         </span>
       </div>
       <p className="mt-2 text-sm text-slate-600">
-        About {spec.estGrams}g of plastic.
+        About {spec.estGrams}g of plastic. Print cost is filament only, not printer time or shipping.
         {retail.sourceUrl && (
           <>
             {" "}
