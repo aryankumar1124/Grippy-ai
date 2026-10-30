@@ -1,45 +1,43 @@
-# Prototype validation and team handoff
+# Prototype validation and integration handoff
 
-Inspection date: 2026-10-29. Baseline: `9430ffd`. Scope: Role D data validation and read-only source inspection. No runtime, physical, clinical, or participant tests are represented as completed.
+Updated 2026-10-29. Role D branch includes shared baseline `637caf5` (real CAD) plus research changes. UI review used `c-ui` at `29ba3e0` in an isolated temporary checkout with Role D JSON files. No teammate implementation files were edited on `arjun`.
 
-## Observed results
+## Tests actually run
 
-| Check | Result and evidence |
+| Check | Result |
 |---|---|
-| Ownership | Changes confined to `data/` and `docs/`; shared types/catalog and README unchanged |
-| Data | JSON parsed; exact contract keys, positive finite prices, HTTPS URLs, four distinct statistics checked |
-| Arithmetic | $20/kg = $0.02/g; 25 g = $0.50. Foam unit uses decimal half-up cent rounding: 1995 cents / 6 = 332.5 cents, rounded to 333 cents |
-| Source references | Retail pages retrieved for key turner, single pen grip, and foam package. Filament price is indexed evidence with live verification limitation documented |
-| UI integration | Pending: `app/page.tsx` is still the Next.js starter page at inspected baseline |
-| CAD / STL | Pending: `lib/cad/` implementation absent at inspected baseline |
-| Runtime API | Not run: local dependencies absent; AI credentials and service behavior not exercised |
-| Fit / durability / usability | Not tested: no physical prototypes or user sessions |
+| `node docs/check-data.cjs` | Pass: exact JSON keys/types, five unique claims, URL syntax, currency arithmetic, local links |
+| `npm run check` after synchronizing main | Pass: ESLint, TypeScript, CAD verification |
+| `npm run verify:cad` through check | Pass: 21 valid geometry combinations and four malformed-spec cases. Checks finite mesh data, STL triangle/byte consistency, base position, positive volume and surface-area-vector balance; not proof of manifoldness or printability |
+| `npm run build` on arjun | Pass, including latest shared CAD baseline |
+| UI branch build with research data | Pass before CAD integration and again with current main CAD in isolated checkout |
+| HTTP offline assessment | Pass: all three task examples across S/M/L and low/medium grip (18 responses), correct aid, fallback flag, positive estimated mass |
+| Catalog bounds | Pass: 18 fallback specs within ranges; six out-of-range specs clamped and unknown parameter discarded |
+| HTTP no-key editing | Three calls returned unchanged parameters and an explicit unsuccessful-edit message; this is expected fallback behavior, not a successful AI edit |
+| Local UI edit function | Three length edits changed parameters and mock mesh coordinates |
+| Real CAD customization | All three length edits changed both mesh coordinates and binary STL bytes |
+| Mock file checks before CAD landed | Nine min/default/max meshes and binary STL byte structures passed. These are superseded by real CAD tests, not functional print evidence |
+| Missing inputs | Empty assessment and missing edit data returned HTTP 400 |
+| Browser preview / click-to-download | Not tested: computer-use stopped because Chrome URL could not be verified. No further browser attempts |
+| Live AI, slicer, physical prints, user testing | Not tested: credentials/service not exercised; no slicer or physical trial |
 
-A first arithmetic check using JavaScript `toFixed` rounded the binary floating-point result of 19.95 / 6 to 3.32. The documented financial convention is decimal half-up rounding; checking integer cents gives 3.33. Use explicit currency rounding for derived unit displays.
+Default backend estimates observed: key turner 15 g, pen grip 12 g, utensil handle 28 g. These are heuristic outputs, not measured print consumption. CAD verification's approximate solid-mass estimates are different again and are not infill-aware slicer weights.
 
-## Findings for owners (not externally sent)
+The initial malformed-input probe expected a JSON error body but received an empty HTTP 500, causing the probe to stop while parsing it. A corrected probe retained raw responses and confirmed the bug. An exploratory mock-parameter assertion also failed because key slot width changes head width even though no functional slot is created; it was not treated as a product test failure. Final real-CAD checks passed.
 
-- **A:** `lib/ai/fallback.ts` asserts several-fold leverage, pen stabilization, reduced force, and a general PETG strength advantage. These are not verified by Role D's research and depend on geometry, user, material, and print profile. Review wording as potential mechanisms rather than established outcomes. The AI must not be represented as a licensed therapist.
-- **A:** Source inspection shows `/api/edit` returns the original spec with HTTP 200 when AI processing fails. Test that the UI clearly displays the unsuccessful-edit message; do not count this as successful modification.
-- **C:** Retail figures are representative units, not market averages. The foam entry is a normalized full-tube price from a required six-pack. Link pricing notes, disclose units, and label the print figure as filament only.
-- **B:** Validate key retention, slot fit, layer orientation, and strength; geometry export alone does not prove suitability.
+## Confirmed issues and exact owner actions
 
-## Integration acceptance checklist
+1. **Aryan: fallback selection.** POST `/api/assess` with `{"problem":"I have trouble eating because my hand tremor makes holding my fork difficult"}` returns `pen_grip` in offline mode. Writing/tremor keywords take priority over the fork task. Make selection task-aware and retest mixed-condition examples.
+2. **Aryan: request validation.** POST `/api/assess` with `{"problem":123}` returns HTTP 500 with no JSON error body. Validate input type before calling `.trim()` and return a useful HTTP 400. Invalid JSON and broader hostile-input coverage remain pending.
+3. **Aryaman: integrate prices and statistics.** `components/model.ts` loads `data/prices.json`; a production bundle built with Role D files contains all three selected prices. Once D and C are merged, prices should be available without changing the schema. No `stats.json` import/consumer exists in the inspected UI. Add a sourced impact statement using `claim`, `number`, and `source_url`, preserving dates and population qualifiers.
+4. **Aryaman: correct cost wording.** `CostPanel.tsx` says “Print it” and “Save X%” while comparing retail with estimated filament only. Label it “Estimated filament cost”, list exclusions, and remove total-savings implications. For utensils disclose “$6.78 per handle; $27.10 pack of 4”. Keep the documented $0.02/g assumption; do not add the optional `plaUSDPerGram` property to D's fixed JSON contract.
+5. **Aryaman and Jonty: coordinate frame.** Current real `lib/cad/mesh.ts` returns y-up coordinates, documented in `docs/ARCHITECTURE.md`; `Viewer3D.tsx` still rotates the mesh by -90 degrees around X under a z-up assumption. Align the viewer with the real mesh convention, then visually verify orientation for all three aids. This is a source-identified mismatch, not an observed browser failure.
+6. **Aryan: merge C carefully.** Merging latest main into the isolated C checkout produced one conflict in `app/layout.tsx`, restricted to title/description metadata. A temporary test retained main's layout verbatim and the combined build passed. No conflict resolution was pushed to C or main. Resolve this when integrating C.
+7. **Aryan and Aryaman: qualify claims.** Review several-fold leverage, pen stabilization, general PETG strength statements, “AI Occupational Therapist”, and “custom fit ... for cents”. Role D did not establish those outcomes. The local edit fallback is keyword-based, not evidence of a working AI service.
+8. **Jonty: supply slicer evidence.** Provide final STLs and print profile, grams including supports/waste, time, and compatibility/strength trial results. Binary STL checks do not establish safe daily use.
 
-Record commit, environment, input, actual output, and evidence for each run. Mark pass/fail/pending rather than assuming success from a screenshot.
+## Remaining acceptance checks
 
-| Scenario | Acceptance criterion | Current status / owner |
-|---|---|---|
-| “I have arthritis and can't turn my house key” | Key turner returned, rationale and safety notes visible, parameters within catalog | Pending / A, C |
-| “My hand shakes when I write” | Pen grip selected; no claim of proven tremor treatment | Pending / A, C |
-| “I can't grip my fork” | Utensil handle selected with relevant sizing | Pending / A, C |
-| Small/large hands; low/medium grip | Valid bounded parameters; no unsupported custom-fit guarantee | Pending / A |
-| “Make the handle longer and add finger grooves” | Supported fields change, others retained, preview and summary agree | Pending / A, B, C |
-| Empty input / service unavailable | Helpful feedback; fallback status understood; failed edits not shown as applied | Pending / A, C |
-| All three aids at min/default/max | Mesh finite and nonempty; STL opens in slicer at correct millimeter scale | Pending / B |
-| Cost panel | JSON prices match; gram estimate distinguished from slicer mass; exclusions and units shown | Pending / C, D |
-| Keyboard and screen reader | Inputs labeled, focus visible, results/loading/errors announced, download reachable | Pending / C, D |
-| Mobile and zoom | No hidden controls or blocked workflow at narrow width and 200% zoom | Pending / C, D |
-| Physical trial | Document print settings, mass, compatibility, retention, edges, comfort, repeated loading | Pending / B, D with reviewer |
+After integration, test three complete browser workflows: task input, recommendation, dimensions, preview, edit, updated preview, retail source and cost display, download, and opening the downloaded STL in a slicer. Verify holes, slots, grooves, retention, and millimeter scale. Exercise keyboard focus, screen-reader announcements, 200% zoom, mobile layout, errors, and fallback disclosure. Obtain physical fit/durability evidence and occupational therapist/user feedback before claiming benefit.
 
-For physical trials, obtain informed agreement, avoid collecting unnecessary health information, use low-risk tasks, and stop immediately for discomfort, slipping, or cracking. Seek occupational therapist review before making therapeutic claims. This checklist is a handoff for the merged prototype, not completed test results.
+No deployed website URL was supplied or tested. Main's page remains the starter UI; a successful temporary combined build is not deployment or end-to-end validation.
