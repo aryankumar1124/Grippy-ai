@@ -5,9 +5,14 @@
     "source_url": "https://www.cdc.gov/mmwr/volumes/72/wr/mm7241a1.htm"
   },
   {
-    "claim": "In the 2022 NHIS, 53.9% of US adults aged 75 or older had diagnosed arthritis; this age-specific estimate is not hand-specific.",
-    "number": "53.9%",
-    "source_url": "https://www.cdc.gov/nchs/products/databriefs/db497.htm"
+    "claim": "CDC FastStats reports diagnosed arthritis among 21.1% of US adults aged 18 or older in 2025 (NHIS). This is not hand-specific and should not be multiplied by an unrelated population total.",
+    "number": "21.1%",
+    "source_url": "https://www.cdc.gov/nchs/fastats/arthritis.htm"
+  },
+  {
+    "claim": "A 2026 study using 2023 NHIS data estimated that 24.8 million US adults with doctor-diagnosed arthritis reported activity limitations attributable to arthritis. This does not measure hand limitations specifically.",
+    "number": "24.8 million",
+    "source_url": "https://stacks.cdc.gov/view/cdc/260898"
   },
   {
     "claim": "A 2025 conference abstract analyzing NHANES reported difficulty grasping or handling small objects among 25.1% of men and 34.9% of women aged 65 or older in 2021–2023. Preliminary abstract evidence; not all US adults or a causal COVID estimate.",
