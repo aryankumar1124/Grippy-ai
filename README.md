@@ -122,7 +122,7 @@ lib/
   ai/                Claude client, prompts, validation, offline fallback
   cad/               geometry: templates, mesh, STL, buildModel
 data/                prices and impact stats
-docs/                architecture notes, video script, images
+docs/                architecture notes, impact research, testing notes, images
 scripts/verify.ts    3D engine verification
 ```
 
@@ -136,8 +136,11 @@ Stack note: `@react-three/fiber@8` and `@react-three/drei@9` are the versions th
 
 - [x] AI assess / edit routes with validation and offline fallback
 - [x] 3D engine for the three aids, with STL export
-- [ ] Product UI wired to the live APIs and engine
-- [ ] Sourced cost figures (retail price vs. print cost)
+- [x] Product UI wired to the live APIs and engine (intake, 3D viewer, edit-by-talking, STL download)
+- [x] Sourced cost figures (retail price vs. estimated filament cost)
+- [ ] Slicer check and a physical print of each aid
+- [ ] Hosted demo
+- [ ] Review by an occupational therapist and user testing
 
 Where it could go next: more aids, freeform designs, review by a real occupational therapist, and a library "print near me" lookup.
 

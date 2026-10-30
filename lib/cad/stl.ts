@@ -10,7 +10,7 @@ export function toStlBlob(geom: Geom3): Blob {
   const tris = triangulate(geom);
   const buf = new ArrayBuffer(84 + 50 * tris.length);
   const dv = new DataView(buf);
-  const header = "AdaptiveMake adaptive aid, units: mm";
+  const header = "Grippy adaptive aid, units: mm";
   for (let i = 0; i < header.length; i++) dv.setUint8(i, header.charCodeAt(i));
   dv.setUint32(80, tris.length, true);
   let o = 84;
