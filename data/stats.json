@@ -1,0 +1,27 @@
+[
+  {
+    "claim": "An estimated 53.2 million US adults aged 18 or older reported diagnosed arthritis in the combined 2019–2021 NHIS; this is not a count of hand arthritis or potential users.",
+    "number": "53.2 million",
+    "source_url": "https://www.cdc.gov/mmwr/volumes/72/wr/mm7241a1.htm"
+  },
+  {
+    "claim": "CDC FastStats reports diagnosed arthritis among 21.1% of US adults aged 18 or older in 2025 (NHIS). This is not hand-specific and should not be multiplied by an unrelated population total.",
+    "number": "21.1%",
+    "source_url": "https://www.cdc.gov/nchs/fastats/arthritis.htm"
+  },
+  {
+    "claim": "A 2026 study using 2023 NHIS data estimated that 24.8 million US adults with doctor-diagnosed arthritis reported activity limitations attributable to arthritis. This does not measure hand limitations specifically.",
+    "number": "24.8 million",
+    "source_url": "https://stacks.cdc.gov/view/cdc/260898"
+  },
+  {
+    "claim": "A 2025 conference abstract analyzing NHANES reported difficulty grasping or handling small objects among 25.1% of men and 34.9% of women aged 65 or older in 2021–2023. Preliminary abstract evidence; not all US adults or a causal COVID estimate.",
+    "number": "25.1% of men; 34.9% of women aged 65+",
+    "source_url": "https://academic.oup.com/innovateage/article/9/Supplement_2/igaf122.2414/8409081"
+  },
+  {
+    "claim": "WHO's January 2024 fact sheet reports that more than 2.5 billion people globally need at least one assistive product across all categories, not specifically hand aids.",
+    "number": "More than 2.5 billion",
+    "source_url": "https://www.who.int/news-room/fact-sheets/detail/assistive-technology"
+  }
+]
