@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import IntakeForm from "@/components/IntakeForm";
 import TherapistCard from "@/components/TherapistCard";
 import CostPanel from "@/components/CostPanel";
-import { buildModel } from "@/components/model";
+import { buildModel, getStat } from "@/components/model";
 import { localEdit } from "@/components/localEdit";
 import type { AidSpec, IntakeInput, MeshData } from "@/lib/types";
 
@@ -22,6 +22,7 @@ async function postJSON<T>(url: string, body: unknown): Promise<T> {
 }
 
 export default function Home() {
+  const stat = getStat("53.2 million");
   const [spec, setSpec] = useState<AidSpec | null>(null);
   const [mesh, setMesh] = useState<MeshData | null>(null);
   const [stl, setStl] = useState<Blob | null>(null);
@@ -97,8 +98,16 @@ export default function Home() {
           Tell us what&apos;s hard. We&apos;ll design the tool.
         </h1>
         <p className="mt-4 text-xl text-slate-600">
-          AI designed adaptive aids, custom fit and 3D printable for cents.
+          AI designed adaptive aids, sized to you and 3D printable for cents of filament.
         </p>
+        {stat && (
+          <p className="mt-4 text-base text-slate-600">
+            <span className="font-semibold text-slate-900">{stat.number}</span> US adults report diagnosed arthritis.{" "}
+            <a href={stat.source_url} target="_blank" rel="noopener noreferrer" className="underline">
+              CDC
+            </a>
+          </p>
+        )}
       </header>
 
       <IntakeForm loading={loading} onSubmit={assess} />
@@ -120,7 +129,7 @@ export default function Home() {
       )}
 
       <footer className="mt-16 text-center text-sm text-slate-500">
-        Built at the Nittany AI Vibeathon. Always check fit and strength before daily use.
+        Built at the Nittany AI Vibeathon. A prototype, not medical advice or a licensed therapist. Check fit and strength before daily use and ask an occupational therapist when you can.
       </footer>
     </main>
   );
