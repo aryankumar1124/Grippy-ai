@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Grippy: AI designed adaptive aids",
-  description: "Tell us what is hard. We will design the tool.",
+  title: "Grippy: AI-designed adaptive aids",
+  description: "Tell us what's hard. We'll design the tool. Custom, 3D-printable adaptive aids from a plain-English description.",
 };
 
 export default function RootLayout({
