@@ -15,6 +15,8 @@ const cadCtx: Ctx = (require as unknown as { context: (d: string, s: boolean, r:
   "../lib/cad", false, /^\.\/index\.(ts|tsx|js)$/);
 const dataCtx: Ctx = (require as unknown as { context: (d: string, s: boolean, r: RegExp) => Ctx }).context(
   "../data", false, /^\.\/prices\.json$/);
+const statsCtx: Ctx = (require as unknown as { context: (d: string, s: boolean, r: RegExp) => Ctx }).context(
+  "../data", false, /^\.\/stats\.json$/);
 
 const realBuild: BuildFn | null = (() => {
   const key = cadCtx.keys()[0];
@@ -53,6 +55,17 @@ export function getRetail(aidType: string): { usd: number; sourceUrl?: string } 
 }
 
 export function getPlaUsdPerGram(): number {
-  const v = prices.plaUSDPerGram;
-  return typeof v === "number" && v > 0 ? v : DEFAULT_PLA_USD_PER_GRAM;
+  return DEFAULT_PLA_USD_PER_GRAM;
+}
+
+export type Stat = { claim: string; number: string; source_url: string };
+
+/** Picks a sourced stat from D's data/stats.json by its number, or null until that file lands. */
+export function getStat(number: string): Stat | null {
+  const key = statsCtx.keys()[0];
+  if (!key) return null;
+  const mod = statsCtx(key);
+  const list = (mod.default ?? mod) as unknown;
+  if (!Array.isArray(list)) return null;
+  return (list as Stat[]).find((s) => s?.number === number && s.source_url) ?? null;
 }

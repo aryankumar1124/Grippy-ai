@@ -6,7 +6,7 @@
  */
 export const USE_MOCK = false;
 
-/** PLA cost per gram in USD (D can override via data/prices.json → "plaUSDPerGram"). */
+/** PLA cost per gram in USD (documented by D in docs/PRINTING_COSTS.md). */
 export const DEFAULT_PLA_USD_PER_GRAM = 0.02;
 
 /** Retail fallback when data/prices.json is not in yet. */

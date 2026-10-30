@@ -15,9 +15,9 @@ function Model({ mesh }: { mesh: MeshData }) {
     return g;
   }, [mesh]);
 
-  // CAD is z-up; three.js is y-up.
+  // lib/cad already returns y-up meshes for three.js (the STL stays z-up), so no rotation here.
   return (
-    <mesh geometry={geometry} rotation={[-Math.PI / 2, 0, 0]} castShadow receiveShadow>
+    <mesh geometry={geometry} castShadow receiveShadow>
       <meshStandardMaterial color="#4F7CAC" roughness={0.75} metalness={0.05} />
     </mesh>
   );

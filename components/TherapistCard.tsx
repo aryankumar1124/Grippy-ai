@@ -35,7 +35,7 @@ export default function TherapistCard({ spec, editing, changeSummary, offline, o
 
   return (
     <section aria-labelledby="ot-heading" className="card">
-      <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">AI Occupational Therapist</p>
+      <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">Thinks like an occupational therapist</p>
       <h2 id="ot-heading" className="mt-1 text-2xl font-bold text-slate-900">
         Recommended: {spec.title}
       </h2>

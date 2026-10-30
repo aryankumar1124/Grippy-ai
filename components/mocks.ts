@@ -13,7 +13,7 @@ export const MOCK_SPEC: AidSpec = {
   estGrams: 18,
 };
 
-/** Rough stand-in shapes (mm, z-up, base at z=0) so the viewer and STL download work before lib/cad lands. */
+/** Rough stand-in shapes (built z-up like the CAD, then turned y-up for the viewer) so the viewer and STL download work before lib/cad lands. */
 function mockGeometry(spec: AidSpec): THREE.BufferGeometry {
   const p = spec.params;
   const parts: THREE.BufferGeometry[] = [];
@@ -39,6 +39,7 @@ function mockGeometry(spec: AidSpec): THREE.BufferGeometry {
 
   const clean = parts.map((g) => g.toNonIndexed());
   const merged = mergeGeometries(clean) ?? clean[0];
+  merged.rotateX(-Math.PI / 2); // match lib/cad: mesh is y-up, (x,y,z) -> (x,z,-y)
   merged.computeVertexNormals();
   return merged;
 }
