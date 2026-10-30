@@ -4,9 +4,9 @@ Research date: 2026-10-29. Estimates below cover filament only, not a finished d
 
 ## Material assumptions and source
 
-The [Bambu Lab US PLA Basic listing](https://bambulab-us.myshopify.com/products/pla-basic-filament) surfaced a $19.99 price and 1 kg size in the search index. The live canonical [US store](https://us.store.bambulab.com/products/pla-basic-filament) could not be fetched, so the exact refill/spool variant and live checkout price require rechecking. Treat $20/kg as a rounded scenario supported by that indexed listing, not a verified delivered quote or market average. Bulk discounts, spool choice, shipping, and tax can change the rate.
+Use **$20/kg as an explicit modeling assumption**, not a verified current Bambu quote or market average. The earlier indexed Bambu $19.99 example is superseded as evidence: the [dated price tracker](https://www.printerdrops.com/filament) now shows Bambu PLA Basic at $14.99/kg and ELEGOO PLA Basic at $13.49/kg. Trackers can be stale or select the cheapest variant. The [ELEGOO manufacturer page](https://us.elegoo.com/products/pla-basic-filament-1-75mm-colored-1kg) was retrieved and identifies a spool-free product, but repeated fetches timed out before price and variant could be independently confirmed. Therefore those tracker amounts are context only, not verified checkout quotes. Shipping, tax, color, spool availability, and bundle conditions can change delivered cost.
 
-PLA is the initial prototype assumption. The team's $0.02/g coefficient matches $20/kg. Actual CAD mass and slicer consumption have not been measured.
+PLA is the initial prototype assumption. The team's $0.02/g coefficient matches $20/kg. Actual CAD mass and slicer consumption have not been measured. Jonty needs to provide the three final STLs and a slicer profile (material, layer height, walls, infill, orientation, supports), then report total consumed grams and estimated print time. The current mock STL is not suitable evidence of functional-part mass.
 
 ## Formula and estimates
 
@@ -18,9 +18,11 @@ At $20/kg: $20 / 1000 = $0.02/g. Filament cost = estimated grams × $0.02/g.
 |---|---:|---:|---:|
 | Key turner | 25 g | $0.50 | $8.74 each |
 | Pen grip | 15 g | $0.30 | $4.95 each |
-| Utensil sleeve | 30 g | $0.60 | $3.33 per 12-inch foam tube, bought as six for $19.95 |
+| Utensil sleeve | 30 g | $0.60 | $6.78 per finished handle, bought as four for $27.10 |
 
-Retail sources, unit normalization, and construction differences are in [PRICING_SOURCES.md](PRICING_SOURCES.md). The foam can be cut into multiple sleeves (approximately $1.11 per 90 mm section under the documented assumption), so the full-tube figure does not establish savings per sleeve. These comparisons do not establish equivalent performance or total savings.
+Retail sources, unit normalization, and construction differences are in [PRICING_SOURCES.md](PRICING_SOURCES.md). Cheaper cut-to-length foam remains an alternative. These comparisons do not establish equivalent performance or total savings. The handoff's alternative 35 g utensil scenario would be $0.70; neither 30 g nor 35 g is a measured mass.
+
+The current backend `estimateGrams` uses a bounding volume, density coefficient 1.24 g/cm³, and a 0.35 multiplier, then rounds with a 3 g minimum. These are unvalidated software assumptions, not slicer results; the “20% infill” comment does not equal the calculation's 35% effective-volume factor. At catalog defaults the code estimates 15 g for the key turner, 12 g for the pen grip, and 28 g for the utensil handle ($0.30, $0.24, and $0.56 at $0.02/g). These code-derived values differ intentionally from the illustrative table and require replacement or calibration against real sliced parts by A/B.
 
 For sensitivity only, 25 g at an assumed $15–30/kg costs $0.375–0.75 before rounding. This is a hypothetical range, not a researched market range.
 

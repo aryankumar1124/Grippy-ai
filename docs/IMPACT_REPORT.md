@@ -6,11 +6,13 @@ Prepared 2026-10-29 for the Nittany AI Vibeathon. This is a prototype impact rat
 
 Limited hand strength, movement, or coordination can make manipulating small objects difficult. The prototype focuses on turning a key, holding a pen, and gripping a utensil. Needs can arise with arthritis, tremor, stroke-related difficulties, limb differences, or other limitations, but diagnosis alone does not determine which aid will help.
 
-[CDC](https://www.cdc.gov/mmwr/volumes/72/wr/mm7241a1.htm) estimated 53.2 million US adults with diagnosed arthritis in 2019–2021. This describes all arthritis, not hand impairment or our addressable user population. See [research notes](RESEARCH_NOTES.md) and [the statistics dataset](../data/stats.json) for populations, periods, and evidence limits.
+[CDC FastStats](https://www.cdc.gov/nchs/fastats/arthritis.htm) reports that 21.1% of US adults aged 18+ had diagnosed arthritis in 2025. A [2026 study of 2023 NHIS data](https://stacks.cdc.gov/view/cdc/260898) estimates 24.8 million adults with arthritis-attributable activity limitations. Neither measure is hand-specific or an addressable-market count. See [research notes](RESEARCH_NOTES.md) and [the statistics dataset](../data/stats.json) for populations, periods, and evidence limits.
 
 ## Existing solutions
 
 Commercial key turners, ergonomic writing grips, and foam handle sleeves already offer ways to change a tool's grasping surface or leverage. They may be inexpensive and sufficient. Fixed sizes, material preferences, tool compatibility, and access to fitting advice can still limit suitability. [WHO](https://www.who.int/news-room/fact-sheets/detail/assistive-technology) identifies cost, access, awareness, product range, and service capacity as broader assistive-technology barriers; our project has not measured their prevalence among its users.
+
+[Makers Making Change's device library](https://www.makersmakingchange.com/assistive-devices) already provides open-source designs and volunteer fabrication requests. Its [low-tech kit initiative](https://www.makersmakingchange.com/news/help-us-print-low-tech-at-kits-MC2LOKUSYDIZGEFPUMP3BGFGO25A) includes printed key turners and pen holders and describes occupational therapist involvement in trials and feedback. AdaptiveMake does not invent printed assistive devices; its proposed contribution is the plain-language selection and parameter-editing workflow. Organizational totals and individual testimonials are not evidence of our prototype's effectiveness.
 
 ## Our solution
 
@@ -26,9 +28,9 @@ Potential benefits include explaining a task in familiar language, exploring a l
 
 ## Affordability
 
-The selected retail examples are $8.74 for a key turner and $4.95 for one writing grip. The foam comparator costs $19.95 for six tubes, or $3.33 per full tube rounded; it can supply multiple shorter sleeves. See [retail evidence](PRICING_SOURCES.md) for links, units, and alternatives.
+The selected retail examples are $8.74 for a key turner and $4.95 for one writing grip. The finished utensil-handle comparator costs $27.10 for four, or $6.78 per handle rounded. Cheaper cut-to-length foam remains an option. See [retail evidence](PRICING_SOURCES.md) for links, units, availability, and alternatives.
 
-At an assumed $20/kg PLA, illustrative 15–30 g parts consume $0.30–0.60 of filament. Those masses are not sliced or weighed. [Printing costs](PRINTING_COSTS.md) excludes neither the importance nor the eventual accounting of electricity, machine access, labor, failures, and finishing; these remain unmeasured additional costs. Affordable customization is a hypothesis to evaluate, not a demonstrated cost advantage over every commercial option.
+At an assumed $20/kg PLA, illustrative 15–30 g parts consume $0.30–0.60 of filament. Those masses are not sliced or weighed. The [filament estimates](PRINTING_COSTS.md) exclude electricity, machine access, labor, failures, and finishing; these remain unmeasured additional costs. Affordable customization is a hypothesis to evaluate, not a demonstrated cost advantage over every commercial option.
 
 ## Limitations
 
