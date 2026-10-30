@@ -80,6 +80,7 @@ Environment variables:
 | `npm run lint` | ESLint (Next.js config) |
 | `npm run typecheck` | `tsc --noEmit` under the strict config |
 | `npm run verify:cad` | Build every aid at min / default / max parameters and check the output (see below) |
+| `npm run export:stl` | Write a print-ready STL for each aid to `./stl-out` (`-- --out <dir>`, or `-- --spec <file.json>` for one design) |
 | `npm run check` | Lint + typecheck + verify:cad, the same things CI runs before the build |
 
 ## API
